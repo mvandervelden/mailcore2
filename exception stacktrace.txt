@@ -1,0 +1,24 @@
+Yeah, probably fixing lastComponent would be better, this crash turned up in our unit tests after updating MailCore2 to the latest version by the way. Before we didn't have this issue. 
+I mainly submitted our fix to indicate the issue and because we had to fix it anyway, because we like to keep our CI builds running =).
+
+stacktrace:
+Thread 1: EXC_BAD_ACCESS (code=1, address=0x0) 
+in
+#0	0x00000001003796c5 in u_strrchr_51 ()
+#1	0x0000000100448e05 in mailcore::String::lastPathComponent() at /ProjectPath/Project/Vendor/MailCore2/src/core/basetypes/MCString.cc:1863
+#2	0x0000000100496e8c in mailcore::HTMLRendererTemplateCallback::templateValuesForPart(mailcore::AbstractPart*) at /ProjectPath/Project/Vendor/MailCore2/src/core/renderer/MCHTMLRendererCallback.cc:148
+#3	0x0000000100493f39 in htmlForAbstractSinglePart(mailcore::AbstractPart*, htmlRendererContext*) at /ProjectPath/Project/Vendor/MailCore2/src/core/renderer/MCHTMLRenderer.cc:369
+#4	0x0000000100492dc2 in htmlForAbstractPart(mailcore::AbstractPart*, htmlRendererContext*) at /ProjectPath/Project/Vendor/MailCore2/src/core/renderer/MCHTMLRenderer.cc:249
+#5	0x0000000100492876 in htmlForAbstractMessage(mailcore::String*, mailcore::AbstractMessage*, mailcore::HTMLRendererIMAPCallback*, mailcore::HTMLRendererTemplateCallback*, mailcore::Array*, mailcore::Array*) at /ProjectPath/Project/Vendor/MailCore2/src/core/renderer/MCHTMLRenderer.cc:221
+#6	0x0000000100492523 in mailcore::HTMLRenderer::htmlForRFC822Message(mailcore::MessageParser*, mailcore::HTMLRendererTemplateCallback*) at /ProjectPath/Project/Vendor/MailCore2/src/core/renderer/MCHTMLRenderer.cc:530
+#7	0x000000010047030d in mailcore::MessageParser::htmlRendering(mailcore::HTMLRendererTemplateCallback*) at /ProjectPath/Project/Vendor/MailCore2/src/core/rfc822/MCMessageParser.cc:123
+#8	0x000000010047040d in mailcore::MessageParser::htmlBodyRendering() at /ProjectPath/Project/Vendor/MailCore2/src/core/rfc822/MCMessageParser.cc:129
+#9	0x00000001004704d1 in mailcore::MessageParser::plainTextBodyRendering(bool) at /ProjectPath/Project/Vendor/MailCore2/src/core/rfc822/MCMessageParser.cc:142
+#10	0x00000001004a0903 in -[MCOMessageParser plainTextBodyRenderingAndStripWhitespace:] at /ProjectPath/Project/Vendor/MailCore2/src/objc/rfc822/MCOMessageParser.mm:89
+#11	0x0000000100011095 in __39-[BBEmailHandler loadFullEmailWithUid:]_block_invoke at /ProjectPath/Project/Model/BBEmailHandler.m:91
+#12	0x000000010d10ce33 in -[BBCachedIMAPSessionStub cached_fetchMessageWithFolder:uid:completion:] at /ProjectPath/ProjectTests/Model/BBEmailHandlerTests.m:165
+#13	0x0000000100010e8c in -[BBEmailHandler loadFullEmailWithUid:] at /ProjectPath/Project/Model/BBEmailHandler.m:89
+#14	0x000000010d10aacd in __36-[BBEmailHandlerSpec spt_defineSpec]_block_invoke129 at /ProjectPath/ProjectTests/Model/BBEmailHandlerTests.m:74
+#15	0x000000010d167759 in runExampleBlock at /ProjectPath/Pods/Specta/src/SPTExampleGroup.m:70
+#16	0x000000010d168c4e in __48-[SPTExampleGroup compileExamplesWithNameStack:]_block_invoke at /ProjectPath/Pods/Specta/src/SPTExampleGroup.m:308
+#17	0x000000010d16d9fd in -[SPTXCTestCase spt_runExampleAtIndex:] at /ProjectPath/Pods/Specta/src/SPTXCTestCase.m:95
